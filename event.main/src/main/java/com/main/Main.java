@@ -14,7 +14,10 @@ public class Main {
             Connection conn = Conn.connect()) {
 
             try {
-                EventDAO.getEvents(conn);
+                EventDAO.selectEvents(conn);
+                EventDAO.insertEvents(conn, sc);
+                EventDAO.selectEvents(conn);
+
             } catch(SQLException ex) {
                 System.out.println("Erro de consulta: "+ex.getMessage());
             }
