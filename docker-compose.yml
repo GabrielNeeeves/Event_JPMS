@@ -1,2 +1,16 @@
-version: '3.8'
+version: '3.9'
 
+volumes:
+  db_event:
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: rootadmin
+      POSTGRES_USER: fromtechadmin
+      POSTGRES_DB: eventDb
+    volumes:
+    - db_event:/var/lib/postgresql/data
+    ports:
+    - "5432:5432"
