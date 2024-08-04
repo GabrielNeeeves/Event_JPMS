@@ -1,5 +1,6 @@
 module event.main {
     requires event.db;
-    requires domain.entity;
+    requires event.model.Event;
+    requires event.model.Participant;
     requires java.sql;
 }
