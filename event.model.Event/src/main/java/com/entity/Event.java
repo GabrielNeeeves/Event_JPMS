@@ -20,7 +20,7 @@ public record Event(int id, int maxQuant, int regitered, LocalDate eventDate, St
         return sc.nextInt();
     }
 
-    private static LocalDate defLocalDate(Scanner sc) {
+    public static LocalDate defLocalDate(Scanner sc) {
         System.out.println("# Day of the event: ");
         int day = sc.nextInt();
 
