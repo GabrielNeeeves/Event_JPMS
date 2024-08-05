@@ -18,7 +18,7 @@ public class EventView {
             System.out.println("2. Create new Event");
             System.out.println("3. Delete Event");
             System.out.println("4. Update Event");
-            System.out.println("9. Exit");
+            System.out.println("9. Previous");
             int option = sc.nextInt();
 
             switch (option) {
