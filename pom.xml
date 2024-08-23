@@ -13,9 +13,11 @@
         <module>event.db</module>
         <module>event.model.Event</module>
         <module>event.model.Participant</module>
+        <module>event.model.Subs</module>
         <module>event.main</module>
         <module>event.eventView</module>
         <module>event.participantView</module>
+        <module>event.subsView</module>
     </modules>
 
     <properties>

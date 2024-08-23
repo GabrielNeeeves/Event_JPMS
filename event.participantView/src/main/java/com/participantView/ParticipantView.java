@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class ParticipantView {
 
     //DISPLAY MENU
-    public static void showMenu(Connection conn, Scanner sc) throws SQLException {
+    public void showMenu(Connection conn, Scanner sc) throws SQLException {
         boolean exit = false;
         while(!exit) {
             System.out.println("1. Display participants");
