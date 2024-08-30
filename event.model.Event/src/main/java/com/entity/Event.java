@@ -3,7 +3,7 @@ package com.entity;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public record Event(int id, int maxQuant, int regitered, LocalDate eventDate, String title, String description) {
+public record Event(int id, int maxQuant, LocalDate eventDate, String title, String description) implements Comparable<Event> {
 
     private static int defId(Scanner sc) {
         System.out.println("ID: ");
@@ -12,11 +12,6 @@ public record Event(int id, int maxQuant, int regitered, LocalDate eventDate, St
 
     private static int defMaxQuant(Scanner sc) {
         System.out.println("Max quantity: ");
-        return sc.nextInt();
-    }
-
-    private static int defRegistered(Scanner sc) {
-        System.out.println("# of registered participants: ");
         return sc.nextInt();
     }
 
@@ -46,11 +41,17 @@ public record Event(int id, int maxQuant, int regitered, LocalDate eventDate, St
     static Event createEvent(Scanner sc) {
         int id = defId(sc);
         int maxQuant = defMaxQuant(sc);
-        int regs = defRegistered(sc);
         LocalDate ld = defLocalDate(sc);
         String title = defTitle(sc);
         String desc = defDesc(sc);
 
-        return new Event(id, maxQuant, regs, ld, title, desc);
+        return new Event(id, maxQuant, ld, title, desc);
+    }
+
+    //sort by ID
+    @Override
+    public int compareTo(Event e) {
+        if(this.id == e.id) return 0;
+        return this.id > e.id ? 1 : -1;
     }
 }

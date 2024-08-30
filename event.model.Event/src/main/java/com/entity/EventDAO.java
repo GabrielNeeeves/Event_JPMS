@@ -5,6 +5,9 @@ import com.sun.java.accessibility.util.EventID;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 import static com.entity.Event.defLocalDate;
@@ -13,6 +16,7 @@ public class EventDAO {
 
     //SELECT
     public static void selectEvents(Connection conn) throws SQLException {
+        List<Event> eventList = new ArrayList<>();
         String sql = "SELECT * FROM EVENT";
         try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()) {
@@ -20,32 +24,29 @@ public class EventDAO {
             while(rs.next()) {
                 int id = rs.getInt(1);
                 int maxQuant = rs.getInt(2);
-                int registered = rs.getInt(3);
-                LocalDate eventDate = rs.getObject(4, LocalDate.class);
-                String title = rs.getString(5);
-                String desc = rs.getString(6);
+                LocalDate eventDate = rs.getObject(3, LocalDate.class);
+                String title = rs.getString(4);
+                String desc = rs.getString(5);
 
-                System.out.printf("""
-                        ID: %d | maxQuantity: %d | Registered: %d | eventDate: %s | Title: %s | Description: %s
-                        """, id, maxQuant, registered ,eventDate, title, desc);
+                eventList.add(new Event(id, maxQuant, eventDate, title, desc));
+                Collections.sort(eventList);
             }
+            eventList.forEach(System.out::println);
 
         }
     }
 
     //INSERT
     public static void insertEvents(Connection conn, Scanner sc) throws SQLException {
-
         Event newEvent = Event.createEvent(sc);
 
-        String sql = "INSERT INTO EVENT (id, maxQuant, registered, eventDate, title, description) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO EVENT (id, maxQuant, eventDate, title, description) VALUES (?, ?, ?, ?, ?)";
         try(PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, newEvent.id());
             ps.setInt(2, newEvent.maxQuant());
-            ps.setInt(3, newEvent.regitered());
-            ps.setObject(4, newEvent.eventDate());
-            ps.setString(5, newEvent.title());
-            ps.setString(6, newEvent.description());
+            ps.setObject(3, newEvent.eventDate());
+            ps.setString(4, newEvent.title());
+            ps.setString(5, newEvent.description());
 
             int upt = ps.executeUpdate();
             System.out.println("Rows inserted: "+upt);
@@ -108,5 +109,35 @@ public class EventDAO {
             int upt = ps.executeUpdate();
             System.out.println("Rows updated: "+upt);
         }
+    }
+
+    //GET maxQuant from Event Table
+    public static int getMaxQuant(Connection conn, int eventId) throws SQLException {
+        String sql = "SELECT maxQuant FROM EVENT WHERE id = ?";
+        try(PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+
+            try(ResultSet rs = ps.executeQuery()) {
+                if(rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+            return 0;
+        }
+    }
+
+    //GET current subs for that Event
+    public static int getCurrentSubs(Connection conn, int eventId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM SUBSCRIPTION WHERE event_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        return 0;
     }
 }

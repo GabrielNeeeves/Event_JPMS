@@ -8,12 +8,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class SubDAO {
 
     //SELECT
     public static void selectSubs(Connection conn) throws SQLException {
+        List<Sub> subList = new ArrayList<>();
         String sql = "SELECT * FROM SUBSCRIPTION";
         try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()) {
@@ -21,9 +25,12 @@ public class SubDAO {
                 int subId = rs.getInt(1);
                 int eventId = rs.getInt(2);
                 String partEmail = rs.getString(3);
-                System.out.printf("""
-                        Sub's id: %d | Event's id: %d | Participant's Email: %s \n""",subId, eventId, partEmail);
+
+                Sub newSub = new Sub(subId, eventId, partEmail);
+                subList.add(newSub);
+                Collections.sort(subList);
             }
+            subList.forEach(System.out::println);
         }
     }
 
@@ -33,17 +40,25 @@ public class SubDAO {
         System.out.println("# Type the Event's ID to subscribe: ");
         int eventId = sc.nextInt();
 
-        ParticipantDAO.selectParticipants(conn);
-        System.out.println("# Type the participant's Email to subscribe: ");
-        String partEmail = sc.next();
+        int maxQuant = EventDAO.getMaxQuant(conn, eventId);
+        int currentSub = EventDAO.getCurrentSubs(conn, eventId);
 
-        String sql = "INSERT INTO SUBSCRIPTION (EVENT_ID, participant_email) VALUES (?, ?)";
-        try(PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, eventId);
-            ps.setString(2,partEmail);
+        if(currentSub < maxQuant) {
 
-            int upt = ps.executeUpdate();
-            if(upt != 0 ) System.out.println("Rows affected: "+upt);
+            ParticipantDAO.selectParticipants(conn);
+            System.out.println("# Type the participant's Email to subscribe: ");
+            String partEmail = sc.next();
+
+            String sql = "INSERT INTO SUBSCRIPTION (event_id, participant_email) VALUES (?, ?)";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, eventId);
+                ps.setString(2, partEmail);
+
+                int upt = ps.executeUpdate();
+                if (upt != 0) System.out.println("Rows affected: " + upt);
+            }
+        } else {
+            System.out.println("Crowded event");
         }
     }
 

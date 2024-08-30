@@ -37,7 +37,7 @@ public class Main {
                 }
 
             } catch(SQLException ex) {
-                System.out.println("Erro de consulta: "+ex.getMessage());
+                ex.printStackTrace();
             }
 
         } catch (SQLException e) {
