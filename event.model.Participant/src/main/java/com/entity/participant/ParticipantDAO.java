@@ -4,12 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ParticipantDAO {
 
     //SELECT
     public static void selectParticipants(Connection conn) throws SQLException {
+        List<Participant> partList = new ArrayList<>();
         String sql = "SELECT * FROM participant";
         try(PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()) {
@@ -19,10 +21,11 @@ public class ParticipantDAO {
                 String email = rs.getString(2);
                 String senha = rs.getString(3);
 
-                System.out.printf("""
-                        ID: %d | EMAIL: %s | PASS: %s
-                        """, id, email, senha);
+                var newPart = new Participant(id, email, senha);
+                partList.add(newPart);
+                Collections.sort(partList);
             }
+            partList.forEach(System.out::println);
 
         }
     }

@@ -2,7 +2,7 @@ package com.entity.participant;
 
 import java.util.Scanner;
 
-public record Participant(int id, String email, String senha) {
+public record Participant(int id, String email, String senha) implements Comparable<Participant> {
 
     private static int defId(Scanner sc) {
         System.out.println("ID: ");
@@ -24,6 +24,13 @@ public record Participant(int id, String email, String senha) {
         String email = defEmail(sc);
         String pass = defPass(sc);
         return new Participant(id, email, pass);
+    }
+
+    //sort by ID ASC
+    @Override
+    public int compareTo(Participant p) {
+        if(this.id == p.id) return 0;
+        return this.id > p.id ? 1 : -1;
     }
 
 }
