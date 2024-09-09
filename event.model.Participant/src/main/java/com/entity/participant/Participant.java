@@ -2,7 +2,7 @@ package com.entity.participant;
 
 import java.util.Scanner;
 
-public record Participant(int id, String email, String senha) implements Comparable<Participant> {
+public record Participant(int id, String email, String pass) implements Comparable<Participant> {
 
     private static int defId(Scanner sc) {
         System.out.println("ID: ");

@@ -38,7 +38,7 @@ public class ParticipantDAO {
         try(PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, newPart.id());
             ps.setString(2, newPart.email());
-            ps.setString(3, newPart.senha());
+            ps.setString(3, newPart.pass());
 
             int upt = ps.executeUpdate();
             System.out.println("Rows affected: "+upt);

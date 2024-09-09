@@ -76,9 +76,6 @@ public class EventDAO {
         System.out.println("Max Quantity: ");
         int newMaxQuant = sc.nextInt();
 
-        System.out.println("# Registered: ");
-        int newRegd = sc.nextInt();
-
         System.out.println("Event date: ");
         LocalDate newLocalDate = defLocalDate(sc);
 
@@ -91,7 +88,6 @@ public class EventDAO {
         String sql = ("""
                 UPDATE event SET
                 maxQuant = ?,
-                registered = ?,
                 eventDate = ?,
                 title = ?,
                 description = ?
@@ -100,11 +96,10 @@ public class EventDAO {
 
         try(PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, newMaxQuant);
-            ps.setInt(2, newRegd);
-            ps.setObject(3, newLocalDate); //LocalDate
-            ps.setString(4, newTitle);
-            ps.setString(5, newDesc);
-            ps.setInt(6, eventId);
+            ps.setObject(2, newLocalDate); //LocalDate
+            ps.setString(3, newTitle);
+            ps.setString(4, newDesc);
+            ps.setInt(5, eventId);
 
             int upt = ps.executeUpdate();
             System.out.println("Rows updated: "+upt);
